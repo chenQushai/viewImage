@@ -1,0 +1,6 @@
+            let arr = {};
+            //数组对象去重
+            state.tabsArr = state.tabsArr.reduce((cur, next) => {
+                arr[next.url] ? "" : arr[next.url] = true && cur.push(next);
+                return cur
+            }, []);//设置cur默认类型为数组，并且初始值为空的数组
