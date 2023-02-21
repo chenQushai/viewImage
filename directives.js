@@ -109,8 +109,34 @@ const waterMark = {
     }
 };
 
+const lazyModules = {
+    inserted: (el, binding, vnode) => {
+        el.style.position = 'relative';
+        let clientHeight = el.clientHeight;
+        let childModules = el.childNodes;
+        let hasInView = [];
+        //检查进入可视区
+        let isIntoView = () => {
+            for (let i = 0; i < childModules.length; i++) {
+                let scrollTop = el.scrollTop;
+                if ((childModules[i].offsetTop - scrollTop) < clientHeight) {
+                    if (!hasInView.includes(i)) { //不包含再添加
+                        hasInView.push(i);
+                        binding.value(i,childModules[i],hasInView)
+                    }
+                }
+            }
+        };
+        isIntoView();
+        el.addEventListener('scroll', () => {
+            isIntoView()
+        });
+    }
+}
+
 export default {
     drag,
     pop,
-    waterMark
+    waterMark,
+    lazyModules
 }
